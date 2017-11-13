@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="ipad10_5" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="USDLFrontViewController">
+            <connections>
+                <outlet property="view" destination="18G-wj-Lsy" id="p9K-Nh-bel"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <viewController nibName="USDLFrontOverlay" id="id8-Xz-2LM" customClass="USDLFrontViewController">
+            <view key="view" contentMode="scaleToFill" id="hz6-Fd-lQR">
+                <rect key="frame" x="0.0" y="0.0" width="834" height="1112"/>
+                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="18G-wj-Lsy">
+                        <rect key="frame" x="0.0" y="0.0" width="834" height="1112"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Scan the Front of the ID" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rce-jr-AYP">
+                                <rect key="frame" x="0.0" y="363" width="834" height="21"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view alpha="0.20000000298023224" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jvJ-1n-eJI">
+                                <rect key="frame" x="0.0" y="0.0" width="834" height="407"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
+                            </view>
+                            <view alpha="0.20000000298023224" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uHr-Iv-YWQ">
+                                <rect key="frame" x="0.0" y="407" width="142.5" height="300"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
+                            </view>
+                            <view alpha="0.20000000298023224" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nj5-Vc-BlT">
+                                <rect key="frame" x="0.0" y="707" width="834" height="405"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
+                            </view>
+                            <view alpha="0.20000000298023224" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iVr-L5-iuR">
+                                <rect key="frame" x="691.5" y="407" width="142.5" height="300"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </subviews>
+                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                <constraints>
+                    <constraint firstItem="18G-wj-Lsy" firstAttribute="bottom" secondItem="yeo-fH-dMb" secondAttribute="bottom" id="FnY-HX-XfZ"/>
+                    <constraint firstItem="18G-wj-Lsy" firstAttribute="leading" secondItem="hz6-Fd-lQR" secondAttribute="leading" id="Jnk-fS-z6Q"/>
+                    <constraint firstAttribute="trailing" secondItem="18G-wj-Lsy" secondAttribute="trailing" id="PUa-Kl-TUJ"/>
+                    <constraint firstItem="18G-wj-Lsy" firstAttribute="top" secondItem="hz6-Fd-lQR" secondAttribute="top" id="bvw-Bf-yXc"/>
+                </constraints>
+                <viewLayoutGuide key="safeArea" id="yeo-fH-dMb"/>
+            </view>
+            <point key="canvasLocation" x="-429.5" y="-900.5"/>
+        </viewController>
+    </objects>
+</document>
