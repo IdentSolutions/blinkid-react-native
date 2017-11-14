@@ -15,6 +15,5 @@
 #endif /* USDLFrontViewController_h */
 
 @interface USDLFrontViewController: PPOverlayViewController
-- (IBAction)torchClicked:(id)sender;
 
 @end

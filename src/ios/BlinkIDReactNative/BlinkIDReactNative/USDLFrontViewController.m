@@ -11,9 +11,19 @@
 #import <MicroBlink/MicroBlink.h>
 
 @implementation USDLFrontViewController : PPOverlayViewController
-
 - (IBAction)torchClicked:(id)sender {
-    NSLog(@"clicked");
+    NSLog(@"front torch");
+    static BOOL torchOn = NO;
+    torchOn = [[self containerViewController] isTorchOn];
+    torchOn = !torchOn;
+    if ([[self containerViewController] overlayViewControllerShouldDisplayTorch:self]) {
+        [[self containerViewController] overlayViewController:self willSetTorch:torchOn];
+    }
 }
+- (IBAction)cancelClicked:(id)sender {
+    NSLog(@"Scan cancelled");
+    [[self containerViewController] overlayViewControllerWillCloseCamera:self];
+}
+
 
 @end
