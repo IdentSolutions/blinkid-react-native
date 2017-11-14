@@ -31,7 +31,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		66F42FBE1FBA08CD00FB51A2 /* USDLFrontOverlay.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = USDLFrontOverlay.xib; sourceTree = "<group>"; };
+		66B1A1F31FBB7E0900672D3F /* USDLFrontOverlay.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = USDLFrontOverlay.xib; sourceTree = "<group>"; };
 		66F42FC21FBA0D9800FB51A2 /* USDLFrontViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = USDLFrontViewController.m; sourceTree = "<group>"; };
 		66F42FC41FBA0DD600FB51A2 /* USDLFrontViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = USDLFrontViewController.h; sourceTree = "<group>"; };
 		66F4302C1FBA420F00FB51A2 /* USDLBackViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = USDLBackViewController.m; sourceTree = "<group>"; };
@@ -84,12 +84,12 @@
 			children = (
 				A27CCA2E1E9E57A500BED675 /* BlinkIDReactNative.h */,
 				A27CCA2F1E9E57A500BED675 /* BlinkIDReactNative.mm */,
-				66F42FBE1FBA08CD00FB51A2 /* USDLFrontOverlay.xib */,
 				66F42FC21FBA0D9800FB51A2 /* USDLFrontViewController.m */,
 				66F42FC41FBA0DD600FB51A2 /* USDLFrontViewController.h */,
 				66F4302C1FBA420F00FB51A2 /* USDLBackViewController.m */,
 				66F4302E1FBA423800FB51A2 /* USDLBackViewController.h */,
 				66F4302F1FBA429100FB51A2 /* USDLBackOverlay.xib */,
+				66B1A1F31FBB7E0900672D3F /* USDLFrontOverlay.xib */,
 			);
 			path = BlinkIDReactNative;
 			sourceTree = "<group>";

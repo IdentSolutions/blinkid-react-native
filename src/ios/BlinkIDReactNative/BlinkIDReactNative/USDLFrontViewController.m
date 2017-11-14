@@ -12,4 +12,8 @@
 
 @implementation USDLFrontViewController : PPOverlayViewController
 
+- (IBAction)torchClicked:(id)sender {
+    NSLog(@"clicked");
+}
+
 @end

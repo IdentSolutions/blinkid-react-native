@@ -118,6 +118,7 @@ RCT_EXPORT_MODULE();
 }
 
 RCT_REMAP_METHOD(scan, scan:(NSString *)key withOptions:(NSDictionary*)scanOptions resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+    dispatch_sync(dispatch_get_main_queue(), ^{
     if (key.length == 0) {
         NSDictionary *userInfo = @{
                                    NSLocalizedDescriptionKey: NSLocalizedString(@"Operation was unsuccessful.", nil),
@@ -180,10 +181,7 @@ RCT_REMAP_METHOD(scan, scan:(NSString *)key withOptions:(NSDictionary*)scanOptio
     
     UIViewController *scanningViewController = [PPViewControllerFactory cameraViewControllerWithDelegate:self overlayViewController:controller coordinator:coordinator error:nil];
     
-
-    
     UIViewController *rootViewController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
-    dispatch_sync(dispatch_get_main_queue(), ^{
         [rootViewController presentViewController:scanningViewController animated:YES completion:nil];
     });
     
