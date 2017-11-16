@@ -10,6 +10,8 @@
 #import "BlinkIDReactNative.h"
 #import <React/RCTConvert.h>
 #import <MicroBlink/MicroBlink.h>
+#import "USDLFrontViewController.h"
+#import "USDLBackViewController.h"
 
 @interface BlinkIDReactNative () <PPScanningDelegate>
 
@@ -47,6 +49,7 @@ static NSString* const kErrorCoordniatorDoesNotExists = @"COORDINATOR_DOES_NOT_E
 static NSString* const kStatusScanCanceled = @"STATUS_SCAN_CANCELED";
 
 // js keys for scanning options
+static NSString* const kOptionShowFrontOverlay = @"showFrontOverlay";
 static NSString* const kOptionEnableBeepKey = @"enableBeep";
 static NSString* const kOptionUseFrontCameraJsKey = @"useFrontCamera";
 static NSString* const kOptionReturnCroppedImageJsKey = @"shouldReturnCroppedImage";
@@ -115,6 +118,7 @@ RCT_EXPORT_MODULE();
 }
 
 RCT_REMAP_METHOD(scan, scan:(NSString *)key withOptions:(NSDictionary*)scanOptions resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+    dispatch_sync(dispatch_get_main_queue(), ^{
     if (key.length == 0) {
         NSDictionary *userInfo = @{
                                    NSLocalizedDescriptionKey: NSLocalizedString(@"Operation was unsuccessful.", nil),
@@ -165,14 +169,19 @@ RCT_REMAP_METHOD(scan, scan:(NSString *)key withOptions:(NSDictionary*)scanOptio
     }
     
     /** Allocate and present the scanning view controller */
-    UIViewController<PPScanningViewController>* scanningViewController = [PPViewControllerFactory cameraViewControllerWithDelegate:self coordinator:coordinator error:nil];
     
-    // allow rotation if VC is displayed as a modal view controller
-    scanningViewController.autorotate = YES;
-    scanningViewController.supportedOrientations = UIInterfaceOrientationMaskAll;
+    PPOverlayViewController* controller;
+    
+    if ([[scanOptions valueForKey:kOptionShowFrontOverlay] boolValue]) {
+        controller = [[USDLFrontViewController alloc] initWithNibName:@"USDLFrontOverlay" bundle:nil];
+    }
+    else {
+        controller = [[USDLBackViewController alloc] initWithNibName:@"USDLBackOverlay" bundle:nil];
+    };
+    
+    UIViewController *scanningViewController = [PPViewControllerFactory cameraViewControllerWithDelegate:self overlayViewController:controller coordinator:coordinator error:nil];
     
     UIViewController *rootViewController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
-    dispatch_sync(dispatch_get_main_queue(), ^{
         [rootViewController presentViewController:scanningViewController animated:YES completion:nil];
     });
     
