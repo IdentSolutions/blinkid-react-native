@@ -47,8 +47,10 @@
 static NSString* const kErrorLicenseKeyDoesNotExists = @"ERROR_LICENSE_KEY_DOES_NOT_EXISTS";
 static NSString* const kErrorCoordniatorDoesNotExists = @"COORDINATOR_DOES_NOT_EXISTS";
 static NSString* const kStatusScanCanceled = @"STATUS_SCAN_CANCELED";
+static NSString* const kStatusScanSkipped = @"STATUS_SCAN_SKIPPED";
 
 // js keys for scanning options
+static NSString* const kOptionShowBackButton = @"showBackButton";
 static NSString* const kOptionShowFrontOverlay = @"showFrontOverlay";
 static NSString* const kOptionEnableBeepKey = @"enableBeep";
 static NSString* const kOptionUseFrontCameraJsKey = @"useFrontCamera";
@@ -170,21 +172,23 @@ RCT_REMAP_METHOD(scan, scan:(NSString *)key withOptions:(NSDictionary*)scanOptio
     
     /** Allocate and present the scanning view controller */
     
-    PPOverlayViewController* controller;
     
     if ([[scanOptions valueForKey:kOptionShowFrontOverlay] boolValue]) {
-        controller = [[USDLFrontViewController alloc] initWithNibName:@"USDLFrontOverlay" bundle:nil];
+        USDLFrontViewController* controller = [[USDLFrontViewController alloc] initWithNibName:@"USDLFrontOverlay" bundle:nil  ];
+        [controller setBackButton: [[scanOptions valueForKey:kOptionShowBackButton] boolValue]];
+        UIViewController *scanningViewController = [PPViewControllerFactory cameraViewControllerWithDelegate:self overlayViewController:controller coordinator:coordinator error:nil];
+        
+        UIViewController *rootViewController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
+        [rootViewController presentViewController:scanningViewController animated:YES completion:nil];
     }
     else {
-        controller = [[USDLBackViewController alloc] initWithNibName:@"USDLBackOverlay" bundle:nil];
-    };
-    
-    UIViewController *scanningViewController = [PPViewControllerFactory cameraViewControllerWithDelegate:self overlayViewController:controller coordinator:coordinator error:nil];
-    
-    UIViewController *rootViewController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
+        USDLBackViewController* controller = [[USDLBackViewController alloc] initWithNibName:@"USDLBackOverlay" bundle:nil];
+        UIViewController *scanningViewController = [PPViewControllerFactory cameraViewControllerWithDelegate:self overlayViewController:controller coordinator:coordinator error:nil];
+        
+        UIViewController *rootViewController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
         [rootViewController presentViewController:scanningViewController animated:YES completion:nil];
-    });
-    
+    }
+});
 }
 
 #pragma mark - BlinkID specifics
@@ -290,6 +294,14 @@ RCT_REMAP_METHOD(scan, scan:(NSString *)key withOptions:(NSDictionary*)scanOptio
 - (void)scanningViewController:(UIViewController<PPScanningViewController> *)scanningViewController
                   didFindError:(NSError *)error {
     // Can be ignored. See description of the method
+    if (self.promiseReject) {
+        NSError *error = [NSError errorWithDomain:MBErrorDomain
+                                             code:-57
+                                         userInfo:nil];
+        self.promiseReject(kStatusScanSkipped, @"Scanning has been skipped", error);
+    }
+    
+    [self dismissScanningView];
 }
 
 - (void)scanningViewControllerDidClose:(UIViewController<PPScanningViewController> *)scanningViewController {

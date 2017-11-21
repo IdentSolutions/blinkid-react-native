@@ -15,5 +15,7 @@
 #endif /* USDLFrontViewController_h */
 
 @interface USDLFrontViewController: PPOverlayViewController
-
+@property (weak, nonatomic) IBOutlet UIButton *back;
+@property (weak, nonatomic) IBOutlet UIButton *torch;
+- (void) setBackButton: (BOOL) value;
 @end

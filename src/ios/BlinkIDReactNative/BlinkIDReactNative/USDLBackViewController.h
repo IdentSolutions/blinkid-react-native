@@ -15,5 +15,6 @@
 #endif /* USDLBackViewController_h */
 
 @interface USDLBackViewController: PPOverlayViewController
+@property (unsafe_unretained, nonatomic) IBOutlet UIButton *torch;
 
 @end

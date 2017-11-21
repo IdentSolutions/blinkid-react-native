@@ -4,7 +4,6 @@
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -12,6 +11,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="USDLBackViewController">
             <connections>
+                <outlet property="torch" destination="6Mn-W4-XaN" id="VEf-8N-dZE"/>
                 <outlet property="view" destination="yCh-il-wfE" id="zku-jS-URn"/>
             </connections>
         </placeholder>

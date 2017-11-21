@@ -11,8 +11,22 @@
 #import <MicroBlink/MicroBlink.h>
 
 @implementation USDLFrontViewController : PPOverlayViewController
+
+BOOL backHidden = false;
+
+-(void) setBackButton:(BOOL) value {
+    backHidden = !value;
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    _torch.hidden = ![[self containerViewController] overlayViewControllerShouldDisplayTorch:self];
+    _back.hidden = backHidden;
+    NSLog(_back.hidden ? @"Yes" : @"No");
+}
+
 - (IBAction)torchClicked:(id)sender {
-    NSLog(@"front torch");
     static BOOL torchOn = NO;
     torchOn = [[self containerViewController] isTorchOn];
     torchOn = !torchOn;
@@ -20,10 +34,14 @@
         [[self containerViewController] overlayViewController:self willSetTorch:torchOn];
     }
 }
-- (IBAction)cancelClicked:(id)sender {
-    NSLog(@"Scan cancelled");
-    [[self containerViewController] overlayViewControllerWillCloseCamera:self];
+
+- (IBAction)skipClicked:(id)sender {
+    [[[self containerViewController] scanningDelegate] scanningViewController:[self containerViewController] didFindError: [NSError alloc]];
 }
 
+
+- (IBAction)backClicked:(id)sender {
+    [[self containerViewController] overlayViewControllerWillCloseCamera:self];
+}
 
 @end
