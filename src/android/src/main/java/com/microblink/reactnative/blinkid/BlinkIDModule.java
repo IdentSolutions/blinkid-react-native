@@ -20,7 +20,6 @@ import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeArray;
 import com.facebook.react.bridge.WritableNativeMap;
-import com.microblink.activity.ScanCard;
 import com.microblink.hardware.camera.CameraType;
 import com.microblink.image.Image;
 import com.microblink.image.ImageListener;
@@ -62,6 +61,7 @@ public class BlinkIDModule extends ReactContextBaseJavaModule {
     // promise reject message codes
     private static final String ERROR_ACTIVITY_DOES_NOT_EXIST = "ERROR_ACTIVITY_DOES_NOT_EXIST";
     private static final String STATUS_SCAN_CANCELED = "STATUS_SCAN_CANCELED";
+    private static final String STATUS_SCAN_SKIPPED = "STATUS_SCAN_SKIPPED";
 
     // js keys for scanning options
     private static final String OPTION_USE_FRONT_CAMERA_JS_KEY = "useFrontCamera";
@@ -69,6 +69,7 @@ public class BlinkIDModule extends ReactContextBaseJavaModule {
     private static final String OPTION_SHOULD_RETURN_CROPPED_IMAGE_JS_KEY = "shouldReturnCroppedImage";
     private static final String OPTION_SHOULD_RETURN_SUCCESSFUL_IMAGE_JS_KEY = "shouldReturnSuccessfulImage";
     private static final String OPTION_SHOULD_RETURN_FACE_IMAGE_JS_KEY = "shouldReturnFaceImage";
+    private static final String OPTION_SHOULD_SHOW_FRONT_OVERLAY = "showFrontOverlay";
     private static final String RECOGNIZERS_ARRAY_JS_KEY = "recognizers";
 
     // js keys for recognizer types
@@ -170,6 +171,7 @@ public class BlinkIDModule extends ReactContextBaseJavaModule {
         mShouldReturnCroppedImage = readBooleanValue(scanningOptions, OPTION_SHOULD_RETURN_CROPPED_IMAGE_JS_KEY, false);
         mShouldReturnSuccessfulImage = readBooleanValue(scanningOptions, OPTION_SHOULD_RETURN_SUCCESSFUL_IMAGE_JS_KEY, false);
         mShouldReturnFaceImage = readBooleanValue(scanningOptions, OPTION_SHOULD_RETURN_FACE_IMAGE_JS_KEY, false);
+        boolean showFrontOverlay = readBooleanValue(scanningOptions, OPTION_SHOULD_SHOW_FRONT_OVERLAY, false);
 
         List<RecognizerSettings> recSettList = new ArrayList<>();
         if (scanningOptions.hasKey(RECOGNIZERS_ARRAY_JS_KEY)) {
@@ -189,17 +191,20 @@ public class BlinkIDModule extends ReactContextBaseJavaModule {
         // its contents will be returned.
         recognitionSettings.setAllowMultipleScanResultsOnSingleImage(true);
 
-        // create scan intent fore ScanCard activity
-        Intent scanIntent = new Intent(currentActivity, ScanCard.class);
-        scanIntent.putExtra(ScanCard.EXTRAS_LICENSE_KEY, licenseKey);
-        scanIntent.putExtra(ScanCard.EXTRAS_CAMERA_TYPE, (Parcelable) (useFrontCamera ? CameraType.CAMERA_FRONTFACE : CameraType.CAMERA_DEFAULT));
-        scanIntent.putExtra(ScanCard.EXTRAS_RECOGNITION_SETTINGS, recognitionSettings);
+        // create scan intent fore ScanDLActivity activity
+        Intent scanIntent = new Intent(currentActivity, ScanDLActivity.class);
+        scanIntent.putExtra(ScanDLActivity.EXTRAS_LICENSE_KEY, licenseKey);
+        scanIntent.putExtra(ScanDLActivity.EXTRAS_CAMERA_TYPE, (Parcelable) (useFrontCamera ? CameraType.CAMERA_FRONTFACE : CameraType.CAMERA_DEFAULT));
+        scanIntent.putExtra(ScanDLActivity.EXTRAS_RECOGNITION_SETTINGS, recognitionSettings);
+
+        if (showFrontOverlay) {
+            scanIntent.putExtra(ScanDLActivity.EXTRAS_CAMERA_OVERLAY, ScanDLActivity.USDL_FRONT);
+        } else {
+            scanIntent.putExtra(ScanDLActivity.EXTRAS_CAMERA_OVERLAY, ScanDLActivity.USDL_BACK);
+        }
 
         boolean enableBeep = readBooleanValue(scanningOptions, OPTION_ENABLE_BEEP_JS_KEY, true);
-        if (enableBeep) {
-            // if scan sound should be played when scanning is done, pass its resource ID
-            scanIntent.putExtra(ScanCard.EXTRAS_BEEP_RESOURCE, R.raw.beep);
-        }
+        scanIntent.putExtra(ScanDLActivity.EXTRAS_ENABLE_BEEP, enableBeep);
 
         // set image metadata settings to define which images will be obtained as metadata during scan process
         MetadataSettings.ImageMetadataSettings ims = new MetadataSettings.ImageMetadataSettings();
@@ -212,10 +217,10 @@ public class BlinkIDModule extends ReactContextBaseJavaModule {
             ims.setSuccessfulScanFrameEnabled(true);
         }
         // pass prepared image metadata settings to scan activity
-        scanIntent.putExtra(ScanCard.EXTRAS_IMAGE_METADATA_SETTINGS, ims);
+        scanIntent.putExtra(ScanDLActivity.EXTRAS_IMAGE_METADATA_SETTINGS, ims);
 
         // pass image listener to scan activity
-        scanIntent.putExtra(ScanCard.EXTRAS_IMAGE_LISTENER,
+        scanIntent.putExtra(ScanDLActivity.EXTRAS_IMAGE_LISTENER,
                 new ScanImageListener(
                         mShouldReturnCroppedImage,
                         mShouldReturnSuccessfulImage,
@@ -632,9 +637,11 @@ public class BlinkIDModule extends ReactContextBaseJavaModule {
         public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
             if (requestCode == REQ_CODE_SCAN) {
                 if (mScanPromise != null) {
-                    if (resultCode == ScanCard.RESULT_OK) {
+                    if (resultCode == ScanDLActivity.RESULT_SKIP) {
+                        rejectPromise(STATUS_SCAN_SKIPPED, "Scanning has been skipped.");
+                    } else if (resultCode == ScanDLActivity.RESULT_OK) {
                         // First, obtain recognition result
-                        RecognitionResults results = data.getParcelableExtra(ScanCard.EXTRAS_RECOGNITION_RESULTS);
+                        RecognitionResults results = data.getParcelableExtra(ScanDLActivity.EXTRAS_RECOGNITION_RESULTS);
                         // Get scan results array. If scan was successful, array will contain at least one element.
                         // Multiple element may be in array if multiple scan results from single image were allowed in settings.
                         BaseRecognitionResult[] resultArray = results.getRecognitionResults();
@@ -683,8 +690,8 @@ public class BlinkIDModule extends ReactContextBaseJavaModule {
                             }
                         }
                         mScanPromise.resolve(root);
-                    } else if (resultCode == ScanCard.RESULT_CANCELED) {
-                        rejectPromise(STATUS_SCAN_CANCELED, "Scanning has been canceled");
+                    } else if (resultCode == ScanDLActivity.RESULT_CANCELED) {
+                        rejectPromise(STATUS_SCAN_CANCELED, "Scanning has been canceled.");
                     }
                     mScanPromise = null;
                 }
