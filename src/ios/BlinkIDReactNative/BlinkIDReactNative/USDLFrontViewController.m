@@ -23,7 +23,6 @@ BOOL backHidden = false;
     [super viewDidLoad];
     _torch.hidden = ![[self containerViewController] overlayViewControllerShouldDisplayTorch:self];
     _back.hidden = backHidden;
-    NSLog(_back.hidden ? @"Yes" : @"No");
 }
 
 - (IBAction)torchClicked:(id)sender {
