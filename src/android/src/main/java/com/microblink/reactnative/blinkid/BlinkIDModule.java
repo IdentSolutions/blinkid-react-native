@@ -70,6 +70,7 @@ public class BlinkIDModule extends ReactContextBaseJavaModule {
     private static final String OPTION_SHOULD_RETURN_SUCCESSFUL_IMAGE_JS_KEY = "shouldReturnSuccessfulImage";
     private static final String OPTION_SHOULD_RETURN_FACE_IMAGE_JS_KEY = "shouldReturnFaceImage";
     private static final String OPTION_SHOULD_SHOW_FRONT_OVERLAY = "showFrontOverlay";
+    private static final String OPTION_SHOULD_SHOW_BACK_BUTTON = "showBackButton";
     private static final String RECOGNIZERS_ARRAY_JS_KEY = "recognizers";
 
     // js keys for recognizer types
@@ -117,6 +118,7 @@ public class BlinkIDModule extends ReactContextBaseJavaModule {
     private boolean mShouldReturnCroppedImage;
     private boolean mShouldReturnSuccessfulImage;
     private boolean mShouldReturnFaceImage;
+    private boolean showBackButton;
 
     public BlinkIDModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -172,6 +174,7 @@ public class BlinkIDModule extends ReactContextBaseJavaModule {
         mShouldReturnSuccessfulImage = readBooleanValue(scanningOptions, OPTION_SHOULD_RETURN_SUCCESSFUL_IMAGE_JS_KEY, false);
         mShouldReturnFaceImage = readBooleanValue(scanningOptions, OPTION_SHOULD_RETURN_FACE_IMAGE_JS_KEY, false);
         boolean showFrontOverlay = readBooleanValue(scanningOptions, OPTION_SHOULD_SHOW_FRONT_OVERLAY, false);
+        showBackButton = readBooleanValue(scanningOptions, OPTION_SHOULD_SHOW_BACK_BUTTON, false);
 
         List<RecognizerSettings> recSettList = new ArrayList<>();
         if (scanningOptions.hasKey(RECOGNIZERS_ARRAY_JS_KEY)) {
@@ -637,7 +640,7 @@ public class BlinkIDModule extends ReactContextBaseJavaModule {
         public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
             if (requestCode == REQ_CODE_SCAN) {
                 if (mScanPromise != null) {
-                    if (resultCode == ScanDLActivity.RESULT_SKIP) {
+                    if (resultCode == ScanDLActivity.RESULT_SKIP || (resultCode == ScanDLActivity.RESULT_CANCELED && !showBackButton)) {
                         rejectPromise(STATUS_SCAN_SKIPPED, "Scanning has been skipped.");
                     } else if (resultCode == ScanDLActivity.RESULT_OK) {
                         // First, obtain recognition result
