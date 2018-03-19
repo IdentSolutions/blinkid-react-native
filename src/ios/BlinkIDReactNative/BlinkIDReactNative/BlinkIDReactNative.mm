@@ -270,10 +270,6 @@ RCT_REMAP_METHOD(scan, scan:(NSString *)key withOptions:(NSDictionary*)scanOptio
         [settings.scanSettings addRecognizerSettings:[self documentFaceRecognizerSettings]];
     }
     
-    if ([self shouldUseMyKadRecognizer]) {
-        [settings.scanSettings addRecognizerSettings:[self myKadRecognizerSettings]];
-    }
-
     if ([self shouldUsePDF417Recognizer]) {
         [settings.scanSettings addRecognizerSettings:[self pdf417RecognizerSettings]];
     }
@@ -406,13 +402,6 @@ RCT_REMAP_METHOD(scan, scan:(NSString *)key withOptions:(NSDictionary*)scanOptio
     [dict setObject:kDocumentFaceResultType forKey:kResultType];
 }
 
-- (void)setDictionary:(NSMutableDictionary *)dict withMyKadRecognizerResult:(PPMyKadRecognizerResult *)myKadResult {
-    NSMutableDictionary *stringElements = [NSMutableDictionary dictionaryWithDictionary:[myKadResult getAllStringElements]];
-    [stringElements setObject:myKadResult.rawOwnerBirthDate forKey:kMyKadBirthDate];
-    [dict setObject:stringElements forKey:kFields];
-    [dict setObject:kMyKadResultType forKey:kResultType];
-}
-
 - (void)setDictionary:(NSMutableDictionary *)dict withPdf417Result:(PPPdf417RecognizerResult *)pdf417Result {
     [dict setObject:[pdf417Result getAllStringElements] forKey:kFields];
     [dict setObject:kPDF417ResultType forKey:kResultType];
@@ -457,15 +446,6 @@ RCT_REMAP_METHOD(scan, scan:(NSString *)key withOptions:(NSDictionary*)scanOptio
             
             NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
             [self setDictionary:dict withDocumentFaceResult:documentFaceResult];
-            
-            [resultArray addObject:dict];
-        }
-        
-        if ([result isKindOfClass:[PPMyKadRecognizerResult class]]) {
-            PPMyKadRecognizerResult *myKadDecoderResult = (PPMyKadRecognizerResult *)result;
-            
-            NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-            [self setDictionary:dict withMyKadRecognizerResult:myKadDecoderResult];
             
             [resultArray addObject:dict];
         }
@@ -620,28 +600,18 @@ RCT_REMAP_METHOD(scan, scan:(NSString *)key withOptions:(NSDictionary*)scanOptio
 }
 
 - (PPDocumentFaceRecognizerSettings *)documentFaceRecognizerSettings {
-    
-    PPDocumentFaceRecognizerSettings *documentFaceReconizerSettings = [[PPDocumentFaceRecognizerSettings alloc] init];
+
+    PPDocumentFaceRecognizerSettings *documentFaceRecognizerSettings = [[PPDocumentFaceRecognizerSettings alloc] init];
     
     // This property is useful if you're at the same time obtaining Dewarped image metadata, since it allows you to obtain dewarped and
     // cropped
     // images of MRTD documents. Dewarped images are returned to scanningViewController:didOutputMetadata: callback,
     // as PPImageMetadata objects with name @"MRTD"
     
-    documentFaceReconizerSettings.returnFaceImage = self.shouldReturnFaceImage;
-
-    documentFaceReconizerSettings.returnFullDocument = self.shouldReturnCroppedImage;
+    documentFaceRecognizerSettings.returnFaceImage = self.shouldReturnFaceImage;
+    documentFaceRecognizerSettings.returnFullDocument = self.shouldReturnCroppedImage;
     
-    return documentFaceReconizerSettings;
-}
-
-- (PPMyKadRecognizerSettings *)myKadRecognizerSettings {
-    
-    PPMyKadRecognizerSettings *myKadRecognizerSettings = [[PPMyKadRecognizerSettings alloc] init];
-    
-    myKadRecognizerSettings.showFullDocument = self.shouldReturnCroppedImage;
-    
-    return myKadRecognizerSettings;
+    return documentFaceRecognizerSettings;
 }
 
 - (PPPdf417RecognizerSettings *)pdf417RecognizerSettings {
