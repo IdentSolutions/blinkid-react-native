@@ -46,7 +46,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight=".35"
+                android:layout_weight=".25"
                 android:background="@color/opaque_background">
 
                 <TextView
@@ -57,10 +57,10 @@
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
                     android:layout_column="0"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginBottom="47dp"
                     android:layout_row="0"
                     android:gravity="bottom|center_horizontal"
-                    android:text="Take a picture of the front of the ID"
+                    android:text="Take a picture of the ID"
                     android:textColor="@android:color/white"
                     android:textSize="24sp" />
             </RelativeLayout>
@@ -79,11 +79,10 @@
 
                 <ImageView
                     android:id="@+id/imageView"
-                    android:layout_width="200dp"
-                    android:layout_height="110dp"
-                    android:layout_alignParentTop="true"
+                    android:layout_width="130dp"
+                    android:layout_height="90dp"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="12dp"
+                    android:layout_centerVertical="true"
                     android:alpha=".6"
                     android:src="@drawable/front" />
 
