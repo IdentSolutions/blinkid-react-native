@@ -14,8 +14,5 @@
         android:required="false"/>
 
     <uses-sdk
-        android:minSdkVersion="16"
         android:targetSdkVersion="25"/>
-    <activity android:name=".ScanDLActivity" android:screenOrientation="portrait" android:configChanges="orientation|keyboardHidden"/>
-
 </manifest>
