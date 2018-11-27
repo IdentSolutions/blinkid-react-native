@@ -102,6 +102,10 @@ RCT_EXPORT_MODULE();
     return self;
 }
 
++ (BOOL)requiresMainQueueSetup {
+    return NO;
+}
+
 - (NSDictionary *)constantsToExport {
     NSMutableDictionary* constants = [NSMutableDictionary dictionary];
     [constants setObject:@"RECOGNIZER_MRTD" forKey:kRecognizerMRTDJsKey];
