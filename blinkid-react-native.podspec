@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
   s.license      = package['license']
   s.platform     = :ios, "9.0"
 
-  s.source       = { :git => "https://github.com/IdentSolutions/blinkid-react-native.git", :tag => "v#{s.version} }
+  s.source       = { :git => "https://github.com/IdentSolutions/blinkid-react-native.git#v2019.9.2" }
   s.source_files  = "src/ios", "src/ios/**/*.{h,m}"
 
   s.dependency 'React'
